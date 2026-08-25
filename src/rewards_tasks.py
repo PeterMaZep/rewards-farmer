@@ -85,7 +85,7 @@ class RewardsTaskUtils:
 	def complete_explore_on_bing_tasks(self):
 		self.switch_to_earn_page()
 
-		explore_on_bing_links = self.wait_for_element(self.elements.get_explore_on_bing_elements)
+		explore_on_bing_links = self.wait_for_element(self.elements.get_explore_on_bing_elements, timeout=30)
 
 		for card in explore_on_bing_links:
 			desc = self.elements.extract_card_descriptions(card)
