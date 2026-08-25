@@ -40,12 +40,30 @@ class ElementSelectionUtils:
 		return daily_set_elems
 
 	def get_explore_on_bing_elements(self):
-		return [
-			self.resolve("/html/body/div[2]/div[2]/div/main/section[2]/div/div[2]/div/div/a[1]"),
-			self.resolve("/html/body/div[2]/div[2]/div/main/section[2]/div/div[2]/div/div/a[2]"),
-			self.resolve("/html/body/div[2]/div[2]/div/main/section[2]/div/div[2]/div/div/a[3]"),
-			self.resolve("/html/body/div[2]/div[2]/div/main/section[2]/div/div[2]/div/div/a[4]")
-		]
+		sections = self.driver.find_elements(By.XPATH, "/html/body/div[2]/div[2]/div/main/section")
+    
+		if len(sections) >= 2:
+			explore_section = sections[1]  # second section
+		else:
+			for sec in sections:
+				try:
+					heading = sec.find_element(By.XPATH, ".//h2")
+					if "explore" in heading.text.lower():
+						explore_section = sec
+						break
+				except:
+					continue
+			else:
+				raise Exception("Could not find the 'Explore on Bing' section.")
+    
+		all_links = explore_section.find_elements(By.XPATH, 
+		".//a[@href and contains(@href, 'bing.com/search')]")
+		valid_cards = [link for link in all_links if link.is_displayed() and link.text.strip()]
+    
+		if not valid_cards:
+			raise Exception("No Explore on Bing task cards found.")
+    
+		return valid_cards
 
 	def get_search_now_link_from_visual_search_sidebar(self):
 		visual_search_sidebar = self.get_sidebar_section()
