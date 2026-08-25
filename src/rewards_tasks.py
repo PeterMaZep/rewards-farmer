@@ -51,11 +51,14 @@ class RewardsTaskUtils:
 		self.move_to_and_click(self.elements.get_dashboard_tab())
 
 	def move_to_and_click(self, elem: WebElement):
-		# Viewport might be too small so...
-		self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", elem)
-		time.sleep(0.3)
-		self.mouse.move_to_element(elem)
-		self.mouse.human_like_click()
+		try:
+			# Viewport might be too small so...
+			self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", elem)
+			time.sleep(0.3)
+			self.mouse.move_to_element(elem)
+			self.mouse.human_like_click()
+		except Exception as e:
+			print(f"[WARNING] Failed to click element {elem!r}: {e!r}")
 
 	def wait_for_then_click(self, element_getter: Callable[[], WebElement], timeout: int = 10):
 		elem = self.wait_for_element(element_getter, timeout)
