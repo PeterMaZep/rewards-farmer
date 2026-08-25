@@ -51,6 +51,9 @@ class RewardsTaskUtils:
 		self.move_to_and_click(self.elements.get_dashboard_tab())
 
 	def move_to_and_click(self, elem: WebElement):
+		# Viewport might be too small so...
+		self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", elem)
+		time.sleep(0.3)
 		self.mouse.move_to_element(elem)
 		self.mouse.human_like_click()
 
